@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(){
+
+    int bt[]={5,3,8};
+    int wt[3];
+
+    wt[0]=0;
+
+    for(int i=1;i<3;i++){
+        wt[i]=wt[i-1]+bt[i-1];
+    }
+
+    int total=0;
+
+    for(int i=0;i<3;i++){
+        total+=wt[i];
+        printf("Process P%d Waiting Time = %d\n",i+1,wt[i]);
+    }
+
+    printf("Average Waiting Time = %.2f\n",(float)total/3);
+
+    return 0;
+}
