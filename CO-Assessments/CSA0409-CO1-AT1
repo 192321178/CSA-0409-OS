@@ -1,1 +1,95 @@
+1.a)
+    * Multi user Operating System-system allowing multiple student to access a single computer simultaneously.
+    * manages CPU,memory and files continueslly to all users.
+  b)
+    * Process management is creating,scheduling with allocated CPU time to each processer.
+    * memory management allocates memory for processer.
 
+  c)//psedo code
+  START
+  Create child process using fork();
+  IF ID less then < 0;
+     Display "Child process creation failed";
+  ELSE IF equals to == 0;
+     Display "Child Process"
+     Display "Child pid=",getpid();
+     Display "Parent pid=",getpid();
+  else greater then >0;
+     Display "Parent Process"
+     Display "Parent pid=",getpid();
+     Display "Child pid=",pid;
+  END
+
+2.a)
+  *creat() – Creates a new file.
+  *open()–opens a file.
+  *write()–writes data into the file.
+  *read()–reads data from the file.
+  *close()–closes the file after use.
+ b)
+  *write()–writes data from the program into a file and it stores information permanently in secondary memory.
+  *read()–reads data from a file into the program so that it can be displayed or processed.
+
+ c)//psedo code
+   START
+   Create/Open a file named "student.txt"
+   Write "Student Name: Santhosh" into the file
+   Display "Data written successfully";
+   Close the file;
+   END
+
+3.a)
+   *open()
+   *read()
+   *write()
+   *close()
+  b)
+   *open()–opens the source and destination files for reading and writing.
+   *close()–closes the files after the copy operation and releases system resources.
+
+  c)//psedo code
+    START
+    Open source file in Read mode;
+    Open destination file in Write mode;
+    WHILE source file is not empty;
+    Read data from source file;
+    Write data into destination file;
+    END WHILE;
+    Close source file;
+    Close destination file;
+    Display "File copied successfully";
+    END
+
+4.a)
+   *fork()–creates a new child process by duplicating the parent process.
+   *exec()–replaces the child process with another program and starts its execution.
+  b)
+   *wait() suspends the parent process until the child process completes its execution.
+   *This confirmed proper synchronization and prevents zombie processes.
+
+  c)//psedo code
+   START
+   Create child process using fork()
+   IF Child Process THEN
+    Execute another program using exec()
+   ELSE
+    Wait for child process using wait()
+    Display "Parent Process Resumed"
+   END
+
+5.a)
+   *Organizes files and folders efficiently.
+   *Provides secure storage and of data.
+   *Controls file and data loss and improves data management.
+  b)
+   *open()–Opens a file and returns a file descriptor for reading or writing.
+   *close()–Closes the file after the operation and frees the associated system resources.
+
+  c)//psedo code
+    START
+    Open the file;
+    Read the contents of the file;
+    Display the contents on the screen;
+    Close the file;
+    END
+   
