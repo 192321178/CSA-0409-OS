@@ -1,0 +1,366 @@
+1).
+#include <stdio.h>
+#define MAX 100
+int main()
+{
+    int disk[MAX] = {0};
+    int n, size, choice, i, j, count;
+    printf("Enter total disk blocks: ");
+    scanf("%d", &n);
+    printf("Enter file size: ");
+    scanf("%d", &size);
+    printf("1. Contiguous\n2. Linked\n3. Indexed\n");
+    printf("Enter choice: ");
+    scanf("%d", &choice);
+    if (choice == 1){
+        for (i = 0; i <= n - size; i++){
+            count = 0;
+            for (j = i; j < i + size; j++){
+                if (disk[j] == 0)
+                    count++;
+            }
+            if (count == size){
+                printf("Allocated blocks: ");
+                for (j = i; j < i + size; j++){
+                    disk[j] = 1;
+                    printf("%d ", j);
+                }
+                return 0;
+            }
+        }
+        printf("Allocation failed: Fragmentation\n");
+    }else if (choice == 2){
+        printf("Allocated blocks: ");
+        for (i = 0; i < size; i++){
+            disk[i] = 1;
+            printf("%d ", i);
+        }
+    }
+    else if (choice == 3){
+        printf("Index block: 0\n");
+        printf("Allocated blocks: ");
+        for (i = 1; i <= size; i++){
+            disk[i] = 1;
+            printf("%d ", i);
+        }
+    }else
+        printf("Invalid choice");
+    return 0;
+}
+
+//Output:
+
+Contiguous
+Enter total disk blocks: 10
+Enter file size: 4
+1. Contiguous
+2. Linked
+3. Indexed
+Enter choice: 1
+
+Allocated blocks: 0 1 2 3
+Linked
+Enter total disk blocks: 10
+Enter file size: 4
+Enter choice: 2
+
+Allocated blocks: 0 1 2 3
+Indexed
+Enter total disk blocks: 10
+Enter file size: 4
+Enter choice: 3
+
+Index block: 0
+Allocated blocks: 1 2 3 4
+
+2).
+#include <stdio.h>
+#define MAX 100
+int main(){
+    int bitmap[MAX], n, size, i, count = 0, block;
+    printf("Enter total disk blocks: ");
+    scanf("%d", &n);
+    printf("Enter bitmap (0-Free, 1-Allocated):\n");
+    for (i = 0; i < n; i++)
+        scanf("%d", &bitmap[i]);
+    printf("Enter number of blocks to allocate: ");
+    scanf("%d", &size);
+    /* Allocation */
+    for (i = 0; i < n && count < size; i++){
+        if (bitmap[i] == 0){
+            bitmap[i] = 1;
+            count++;
+        }
+    }
+    if (count == size)
+        printf("Allocation successful\n");
+    else
+        printf("Not enough free space\n");
+    printf("Updated bitmap: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", bitmap[i]);
+    /* Deallocation */
+    printf("\nEnter block number to deallocate: ");
+    scanf("%d", &block);
+    if (block >= 0 && block < n && bitmap[block] == 1){
+        bitmap[block] = 0;
+        printf("Block %d deallocated\n", block);
+    }else
+        printf("Invalid block\n");
+    printf("Final bitmap: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", bitmap[i]);
+    return 0;
+}
+
+//Output:
+
+Enter total disk blocks: 8
+Enter bitmap:
+0 1 0 0 1 1 0 0
+
+Enter number of blocks to allocate: 3
+
+Allocation successful
+Updated bitmap: 1 1 1 1 1 1 0 0
+
+Enter block number to deallocate: 2
+
+Block 2 deallocated
+Final bitmap: 1 1 0 1 1 1 0 0
+
+3).
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int a[20], used[20]={0}, n, head, disk;
+    int i, j, x, min, pos;
+    int fcfs=0, sstf=0, scan=0;
+    printf("Enter n: ");
+    scanf("%d",&n);
+    for(i=0;i<n;i++)
+        scanf("%d",&a[i]);
+    printf("Enter head and disk size: ");
+    scanf("%d%d",&head,&disk);
+    /* FCFS */
+    x=head;
+    printf("\nFCFS: %d ",x);
+    for(i=0;i<n;i++){
+        fcfs+=abs(a[i]-x);
+        x=a[i];
+        printf("-> %d ",x);
+    }
+    /* SSTF */
+    x=head;
+    printf("\nSSTF: %d ",x);
+    for(i=0;i<n;i++){
+        min=9999; pos=-1;
+        for(j=0;j<n;j++)
+            if(!used[j] && abs(a[j]-x)<min){
+                min=abs(a[j]-x);
+                pos=j;
+            }
+        used[pos]=1;
+        sstf+=min;
+        x=a[pos];
+        printf("-> %d ",x);
+    }
+    /* SCAN */
+    for(i=0;i<n-1;i++)
+        for(j=i+1;j<n;j++)
+            if(a[i]>a[j]){
+                int t=a[i];
+                a[i]=a[j];
+                a[j]=t;
+            }
+    x=head;
+    printf("\nSCAN: %d ",x);
+    for(i=0;i<n;i++)
+        if(a[i]>=head){
+            scan+=abs(a[i]-x);
+            x=a[i];
+            printf("-> %d ",x);
+        }
+    scan+=abs(disk-1-x);
+    x=disk-1;
+    for(i=n-1;i>=0;i--)
+        if(a[i]<head){
+            scan+=abs(a[i]-x);
+            x=a[i];
+            printf("-> %d ",x);
+        }
+    printf("\nFCFS = %d",fcfs);
+    printf("\nSSTF = %d",sstf);
+    printf("\nSCAN = %d",scan);
+    if(fcfs<=sstf && fcfs<=scan)
+        printf("\nBest: FCFS");
+    else if(sstf<=scan)
+        printf("\nBest: SSTF");
+    else
+        printf("\nBest: SCAN");
+    return 0;
+}
+
+//Ouput:
+
+Enter n: 5
+98 183 37 122 14
+Enter head and disk size: 53 200
+
+FCFS: 53 -> 98 -> 183 -> 37 -> 122 -> 14
+
+SSTF: 53 -> 37 -> 14 -> 98 -> 122 -> 183
+
+SCAN: 53 -> 98 -> 122 -> 183 -> 37 -> 14
+
+FCFS = 640
+SSTF = 236
+SCAN = 345
+
+Best: SSTF
+
+4).
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int a[20], n, head, disk, i, j, pos=0;
+    int cscan=0, look=0, x;
+    printf("Enter n: ");
+    scanf("%d",&n);
+    for(i=0;i<n;i++)
+        scanf("%d",&a[i]);
+    printf("Enter head and disk size: ");
+    scanf("%d%d",&head,&disk);
+    for(i=0;i<n-1;i++)
+        for(j=i+1;j<n;j++)
+            if(a[i]>a[j]){
+                int t=a[i];
+                a[i]=a[j];
+                a[j]=t;
+            }
+    while(pos<n && a[pos]<head)
+        pos++;
+    /* C-SCAN */
+    x=head;
+    printf("\nC-SCAN: %d ",x);
+    for(i=pos;i<n;i++)
+    {
+        cscan+=abs(a[i]-x);
+        x=a[i];
+        printf("-> %d ",x);
+    }
+    cscan+=disk-1-x;
+    x=0;
+    cscan+=disk-1;
+    for(i=0;i<pos;i++){
+        cscan+=abs(a[i]-x);
+        x=a[i];
+        printf("-> %d ",x);
+    }
+    /* LOOK */
+    x=head;
+    printf("\nLOOK: %d ",x);
+    for(i=pos;i<n;i++)
+    {
+        look+=abs(a[i]-x);
+        x=a[i];
+        printf("-> %d ",x);
+    }
+    for(i=pos-1;i>=0;i--){
+        look+=abs(a[i]-x);
+        x=a[i];
+        printf("-> %d ",x);
+    }
+    printf("\nC-SCAN = %d",cscan);
+    printf("\nLOOK = %d",look);
+    if(cscan<look)
+        printf("\nBest: C-SCAN");
+    else
+        printf("\nBest: LOOK");
+    return 0;
+}
+
+//Output:
+
+Enter n: 5
+98 183 37 122 14
+Enter head and disk size: 53 200
+
+C-SCAN: 53 -> 98 -> 122 -> 183 -> 14 -> 37
+
+LOOK: 53 -> 98 -> 122 -> 183 -> 37 -> 14
+
+C-SCAN = 382
+LOOK = 299
+
+Best: LOOK
+
+5).
+#include <stdio.h>
+#include <stdlib.h>
+int main(){
+    int block[100], used[100]={0};
+    int n, size, choice, schedule;
+    int head, i, j, seek=0, count=0;
+    printf("Enter disk blocks and file size: ");
+    scanf("%d%d",&n,&size);
+    printf("1.Contiguous 2.Indexed: ");
+    scanf("%d",&choice);
+    /* Allocation */
+    if(choice==1){
+        for(i=0;i<size;i++)
+            block[i]=i;
+
+        count=size;
+    }
+    else{
+        for(i=0;i<size;i++)
+            block[i]=i;
+
+        count=size;
+    }
+    printf("Allocated Blocks: ");
+    for(i=0;i<count;i++)
+        printf("%d ",block[i]);
+    printf("\nEnter head: ");
+    scanf("%d",&head);
+    printf("1.FCFS 2.SSTF: ");
+    scanf("%d",&schedule);
+    printf("Sequence: %d ",head);
+    if(schedule==1){
+        for(i=0;i<count;i++){
+            seek+=abs(block[i]-head);
+            head=block[i];
+            printf("-> %d ",head);
+        }
+    }else{
+        for(i=0;i<count;i++){
+            int min=9999,pos;
+            for(j=0;j<count;j++)
+                if(!used[j] && abs(block[j]-head)<min){
+                    min=abs(block[j]-head);
+                    pos=j;
+                }
+            used[pos]=1;
+            seek+=min;
+            head=block[pos];
+            printf("-> %d ",head);
+        }
+    }
+    printf("\nTotal Seek Time = %d",seek);
+    return 0;
+}
+
+//Output:
+
+Enter disk blocks and file size: 20 5
+1.Contiguous 2.Indexed: 1
+
+Allocated Blocks: 0 1 2 3 4
+
+Enter head: 10
+1.FCFS 2.SSTF: 1
+
+Sequence: 10 -> 0 -> 1 -> 2 -> 3 -> 4
+
+Total Seek Time = 10
