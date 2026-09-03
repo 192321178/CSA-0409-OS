@@ -1,7 +1,7 @@
 /* ===================================================================
    CSA04 - Operating Systems Assignment
    Team 1: Online Food Delivery App
-   PART I : PROCESS MANAGEMENT & CPU SCHEDULING (CO2, Unit II)
+   PART I : PROCESS MANAGEMENT & CPU SCHEDULING
    Algorithms: FCFS, SJF (Non-Preemptive), Priority (Non-Preemptive),
                Round Robin (Quantum = 2)
    =================================================================== */
